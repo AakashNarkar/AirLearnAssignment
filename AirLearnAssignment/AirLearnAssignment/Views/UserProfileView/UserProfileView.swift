@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SDWebImageSwiftUI
 
 struct UserProfileView: View {
     let user: GitHubUser
@@ -18,11 +19,18 @@ struct UserProfileView: View {
     
     var body: some View {
         VStack(spacing: 20) {
-            AsyncImage(url: URL(string: user.avatarURL)!)
+            if let url = URL(string: user.avatarURL) {
+                WebImage(url: url) { image in
+                    image
+                        .resizable()
+                } placeholder: {
+                    ProgressView()
+                }
                 .frame(width: 120, height: 120)
                 .clipShape(Circle())
                 .overlay(Circle().stroke(Color.white, lineWidth: 2))
                 .shadow(radius: 10)
+            }
             
             VStack(spacing: 8) {
                 Text(user.login)
@@ -80,5 +88,13 @@ struct UserProfileView: View {
         let displayFormatter = DateFormatter()
         displayFormatter.dateStyle = .medium
         return displayFormatter.string(from: date)
+    }
+}
+
+struct UserProfileView_Previews: PreviewProvider {
+    static var previews: some View {
+        let mockUser = GitHubUser(login: "A", id: 1410106, nodeID: "MDQ6VXNlcjE0MTAxMDY", avatarURL: "https://avatars.githubusercontent.com/u/1410106?v=4", gravatarID: "", url: "", htmlURL: "", followersURL: "", followingURL: "", gistsURL: "", starredURL: "", subscriptionsURL: "", organizationsURL: "", reposURL: "https://api.github.com/users/A/repos", eventsURL: "", receivedEventsURL: "", type: .user, userViewType: .userViewTypePublic, siteAdmin: true)
+        
+        UserProfileView(user: mockUser)
     }
 }

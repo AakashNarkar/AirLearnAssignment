@@ -20,11 +20,11 @@ struct RepositoriesListView: View {
     
     var body: some View {
         List {
-            Text("Repositories")
+            Text(Constant.PlainConstant.repositories)
                 .font(.headline)
                 .padding(.horizontal)
             if repositories.isEmpty {
-                Text("Repositories not found")
+                Text(Constant.PlainConstant.repositoriesNotFound)
                     .foregroundColor(.gray)
                     .padding()
             } else {
@@ -38,5 +38,17 @@ struct RepositoriesListView: View {
         .refreshable {
             viewModel.fetchRepositories()
         }
+    }
+}
+
+struct RepositoriesListView_Previews: PreviewProvider {
+    static var previews: some View {
+        let mockUser = GitHubUser(login: "A", id: 1410106, nodeID: "MDQ6VXNlcjE0MTAxMDY", avatarURL: "https://avatars.githubusercontent.com/u/1410106?v=4", gravatarID: "", url: "", htmlURL: "", followersURL: "", followingURL: "", gistsURL: "", starredURL: "", subscriptionsURL: "", organizationsURL: "", reposURL: "https://api.github.com/users/A/repos", eventsURL: "", receivedEventsURL: "", type: .user, userViewType: .userViewTypePublic, siteAdmin: true)
+        
+        let mockRepositories = [
+            Repository(id: 1002, name: "TestRepo", description: "Just a test repo", stargazersCount: 2, forksCount: 2, language: "Python")
+        ]
+        
+        RepositoriesListView(user: mockUser, repositories: mockRepositories)
     }
 }

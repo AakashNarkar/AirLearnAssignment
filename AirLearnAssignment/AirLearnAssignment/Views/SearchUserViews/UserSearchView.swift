@@ -60,3 +60,9 @@ struct UserSearchView: View {
         }
     }
 }
+
+struct UserSearchView_Previews: PreviewProvider {
+    static var previews: some View {
+        UserSearchView()
+    }
+}

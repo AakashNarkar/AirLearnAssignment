@@ -20,13 +20,13 @@ struct RepositoryRowView: View {
                 
                 HStack(spacing: 16) {
                     HStack(spacing: 4) {
-                        Image(systemName: "star.fill")
+                        Image(systemName: Constant.ImageConstant.starfill)
                             .foregroundColor(.yellow)
                         Text("\(repository.stargazersCount)")
                     }
                     
                     HStack(spacing: 4) {
-                        Image(systemName: "arrow.triangle.branch")
+                        Image(systemName: Constant.ImageConstant.arrowBranch)
                         Text("\(repository.forksCount)")
                     }
                 }
@@ -70,5 +70,15 @@ struct RepositoryRowView: View {
         case "c#": return .green
         default: return .gray
         }
+    }
+}
+
+
+struct RepositoryRowView_Previews: PreviewProvider {
+    static var previews: some View {
+        let mockRepository = Repository(id: 1002, name: "TestRepo", description: "Just a test repo", stargazersCount: 2, forksCount: 2, language: "Python")
+        
+        RepositoryRowView(repository: mockRepository)
+            .previewLayout(.sizeThatFits)
     }
 }
