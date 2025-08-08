@@ -13,7 +13,7 @@ struct AirLearnAssignmentApp: App {
 
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            UserSearchView()
                 .environment(\.managedObjectContext, persistenceController.container.viewContext)
         }
     }
