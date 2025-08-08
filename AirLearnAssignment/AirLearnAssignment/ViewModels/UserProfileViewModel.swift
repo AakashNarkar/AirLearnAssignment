@@ -21,9 +21,7 @@ class UserProfileViewModel: ObservableObject {
     init(user: GitHubUser, githubService: GitHubServiceProtocol = GitHubService()) {
         self.user = user
         self.githubService = githubService
-        fetchUser()
-        fetchUserFollowers()
-        fetchRepositories()
+        self.loadDataAsync()
     }
     
     func fetchUser() {
@@ -63,6 +61,29 @@ class UserProfileViewModel: ObservableObject {
                     self?.error = error
                 }
             } receiveValue: { [weak self] repositories in
+                self?.repositories = repositories
+            }
+            .store(in: &cancellables)
+    }
+    
+    func loadDataAsync() {
+        isLoading = true
+        error = nil
+
+        let userPublisher = githubService.fetchUser(username: user.login)
+        let followersPublisher = githubService.fetchFollowers(username: user.login)
+        let reposPublisher = githubService.fetchUserRepositories(username: user.login)
+
+        Publishers.Zip3(userPublisher, followersPublisher, reposPublisher)
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] completion in
+                self?.isLoading = false
+                if case .failure(let err) = completion {
+                    self?.error = err
+                }
+            } receiveValue: { [weak self] user, followers, repositories in
+                self?.user = user
+                self?.followers = followers.count
                 self?.repositories = repositories
             }
             .store(in: &cancellables)
